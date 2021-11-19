@@ -1,13 +1,12 @@
-IDIR =../include
+IDIR =./include
 CC=gcc
 CFLAGS=-I$(IDIR)
 
-ODIR=obj
-LDIR =../libs
+ODIR= ./src
 
-LIBS=-llibglfw3
+LIBS= -lopengl32 -L./libs -lglfw3
 
-_DEPS = stuff.h
+_DEPS = stuff.h morestuff.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = Test.o
@@ -17,7 +16,7 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-Test: $(OBJ)
+bin/Test: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
