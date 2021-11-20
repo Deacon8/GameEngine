@@ -4,22 +4,22 @@ CFLAGS=-I$(IDIR)
 
 ODIR= ./src
 
-LIBS= -lopengl32 -L./libs -lglfw3
+LIBS= -lopengl32 -lgdi32 -L./libs -lglfw3
 
-_DEPS = stuff.h morestuff.h
+_DEPS = KHR/khrplatform.h glfw/glfw3.h glad/glad.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = Test.o
+_OBJ = main.c glad.c 
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-bin/Test: $(OBJ)
+bin/Game: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ 
