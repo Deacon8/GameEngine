@@ -30,7 +30,7 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
 	}
-	
+	printf("Done");
 	glfwTerminate();
 	
 	return(0);

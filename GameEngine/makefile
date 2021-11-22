@@ -4,9 +4,9 @@ CFLAGS=-I$(IDIR)
 
 ODIR= ./src
 
-LIBS= -lopengl32 -lgdi32 -L./libs
+LIBS= -lopengl32 -lgdi32 -lmingw32 -L./libs -lglfw3
 
-_DEPS = glad/glad.h
+_DEPS = glad/glad.h glfw/glfw.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = main.c glad.c 
