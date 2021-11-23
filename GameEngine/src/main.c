@@ -7,19 +7,6 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 
-const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
 int main()
 {
 	//Create Window
@@ -45,9 +32,14 @@ int main()
 	
 	//ShaderStuff
 	Shader shader;
-	LoadShaderSource(shader.vertexShaderSource, "path");
-	LoadShaderSource(shader.vertexShaderSource, "path");
-
+	LoadShaderSource(shader.VertexShaderSource, "res/shaders/basic.vert");
+	LoadShaderSource(shader.FragmentShaderSource, "res/shaders/basic.frag");
+	printf("%s", shader.VertexShaderSource);
+	shader.VertexShader = LoadVertexShader((const char*)shader.VertexShaderSource);
+	shader.FragmentShader = LoadFragmentShader((const char*)shader.FragmentShaderSource);
+	shader.ShaderProgram = LinkShaders(shader.VertexShader, shader.FragmentShader);
+	DeleteShader(shader.VertexShader);
+	DeleteShader(shader.FragmentShader);
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // left  
          0.5f, -0.5f, 0.0f, // right 
@@ -69,9 +61,8 @@ int main()
 	{	
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-		
-		glUseProgram(shaderProgram);
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+		glUseProgram(shader.ShaderProgram);
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
