@@ -78,6 +78,13 @@ void DeleteShader(unsigned int shader)
 	glDeleteShader(shader);
 }
 
+void SetUniformFloat(Shader shader, const char* name, float value)
+{
+	int location = glGetUniformLocation(shader.ShaderProgram, name);
+	glUseProgram(shader.ShaderProgram);
+	glUniform1f(location, value);
+}
+
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath)
 {	
 	Shader shader;
@@ -90,7 +97,7 @@ Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath)
 	shader.VertexShader = LoadVertexShader((const char*)BasicVertex);
 	shader.FragmentShader = LoadFragmentShader((const char*)BasicFragment);
 	shader.ShaderProgram = LinkShaders(shader.VertexShader, shader.FragmentShader);
-	
+
 	DeleteShader(shader.VertexShader);
 	DeleteShader(shader.FragmentShader);
 	

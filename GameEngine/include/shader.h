@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 
-#define MaxShaderSize 150
+#define MaxShaderSize 500
 
 
 struct Shader
@@ -22,6 +22,8 @@ unsigned int LoadFragmentShader(const char* source);
 unsigned int LinkShaders(unsigned int vertexShader, unsigned int fragmentShader);
 
 void DeleteShader(unsigned int shader);
+
+void SetUniformFloat(Shader shader, const char* name, float value);
 
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath);
 

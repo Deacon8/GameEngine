@@ -30,20 +30,8 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	
-	//ShaderStuff
-	Shader shader;
-	
-	char* BasicVertex = malloc(MaxShaderSize);
-	char* BasicFragment = malloc(MaxShaderSize);
-	LoadShaderSource(BasicFragment, "res/shaders/basic.frag");
-	LoadShaderSource(BasicVertex, "res/shaders/basic.vert");
-	
-	shader.VertexShader = LoadVertexShader((const char*)BasicVertex);
-	shader.FragmentShader = LoadFragmentShader((const char*)BasicFragment);
-	shader.ShaderProgram = LinkShaders(shader.VertexShader, shader.FragmentShader);
-	
-	DeleteShader(shader.VertexShader);
-	DeleteShader(shader.FragmentShader);
+	Shader shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/crazy.frag");
+	SetUniformFloat(shader, "time", 0.0f);
 	
     float vertices[] = 
 	{
@@ -74,16 +62,22 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 	
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0); 
 
 	while(!glfwWindowShouldClose(window))
 	{	
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+		
 		glUseProgram(shader.ShaderProgram);
+		SetUniformFloat(shader, "time", glfwGetTime());
+		
         glBindVertexArray(VAO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
