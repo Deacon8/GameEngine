@@ -3,7 +3,9 @@
 #define GLFW_DLL
 #include "glfw/glfw3.h"
 
+#include "memory.h"
 #include "shader.h"
+#include "model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 

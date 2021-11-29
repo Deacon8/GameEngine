@@ -6,10 +6,10 @@ ODIR= ./src
 
 LIBS= -lopengl32 -lgdi32 -lmingw32 -L./libs -lglfw3
 
-_DEPS = glad/glad.h glfw/glfw.h shader.h
+_DEPS = glad/glad.h glfw/glfw.h shader.h model.h memory.h HandmadeMath.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.c glad.c shader.c
+_OBJ = main.c glad.c shader.c model.c memory.c
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

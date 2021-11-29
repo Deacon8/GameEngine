@@ -1,13 +1,14 @@
 #include "shader.h"
 #include "glad/glad.h"
 #include <stdio.h>
+#include "memory.h"
 
 void LoadShaderSource(char* destination, char* path)
 {	
 	FILE* file = fopen(path, "r");
 	if (file != NULL) 
 	{
-		size_t newLen = fread(destination, sizeof(char), MaxShaderSize, file);
+		size_t newLen = fread(destination, sizeof(char), GetFileSize(path), file);
 		if ( ferror( file ) != 0 ) 
 		{
 			fputs("Error reading file", stderr);
@@ -88,9 +89,10 @@ void SetUniformFloat(Shader shader, const char* name, float value)
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath)
 {	
 	Shader shader;
-	
-	char* BasicVertex = malloc(MaxShaderSize);
-	char* BasicFragment = malloc(MaxShaderSize);
+	int vsize = GetFileSize(VertexShaderPath)+1;
+	int fsize = GetFileSize(FragmentShaderPath)+1;
+	char* BasicVertex = malloc(vsize);
+	char* BasicFragment = malloc(fsize);
 	LoadShaderSource(BasicVertex, VertexShaderPath);
 	LoadShaderSource(BasicFragment, FragmentShaderPath);
 	

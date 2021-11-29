@@ -1,8 +1,6 @@
 #pragma once
 #include <stdlib.h>
 
-#define MaxShaderSize 500
-
 
 struct Shader
 {	
