@@ -49,7 +49,7 @@ int main()
 	};  
 	
 	model test = LoadOBJ("res/models/cube.obj");
-	printf("%i", test.vsize);
+	//printf("Works: %i\n", test.vsize);
 
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -69,21 +69,20 @@ int main()
 	
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0); 
+	
+	printf("Q");
 
 	while(!glfwWindowShouldClose(window))
 	{	
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-		
 		glUseProgram(shader.ShaderProgram);
 		SetUniformFloat(shader, "time", glfwGetTime());
-		
         glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
 		glfwSwapBuffers(window);
+		//Throws Error??
 		glfwPollEvents();
 	}
 	printf("Done");

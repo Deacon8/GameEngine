@@ -22,7 +22,9 @@ model LoadOBJ(char* path)
 	unsigned int vertexIndices[500];
 	unsigned int uvIndices[500];
 	unsigned int normalIndices[500];
-	unsigned int viindex, uiindex, niindex = 0;
+	unsigned int viindex = 0;
+	unsigned int uiindex = 0;
+	unsigned int niindex = 0;
 	
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
@@ -33,7 +35,6 @@ model LoadOBJ(char* path)
 	{	
 		//Only 128??
 		char lineHeader[128];
-		printf("2");
 		int res = fscanf(file, "%s", lineHeader);
 		if (res == EOF)
 		{
@@ -60,7 +61,7 @@ model LoadOBJ(char* path)
 				hmm_vec3 normal;
 				fscanf(file, "%f %f %f\n", &normal.X, &normal.Y, &normal.Z );
 				temp_normals[nindex] = normal;
-				printf("  %i  \n", nindex);
+				//printf("  %i  \n", nindex);
 				nindex++;
 			}
 			else if ( strcmp( lineHeader, "f" ) == 0 )
@@ -72,9 +73,7 @@ model LoadOBJ(char* path)
 					printf("File not read properly\n");
 				}
 				//Vertex
-				printf("T");
 				vertexIndices[viindex] = vertexIndex[0];
-				printf("s");
 				viindex++;
 				vertexIndices[viindex] = vertexIndex[1];
 				viindex++;
@@ -104,7 +103,7 @@ model LoadOBJ(char* path)
 		}
 			
 	}
-		printf("1");
+	
 	//Might destroy pointers ince local?
 	model out;
 	out.vertices = malloc(sizeof(float) * vindex);
