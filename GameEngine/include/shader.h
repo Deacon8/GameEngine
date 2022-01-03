@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include "camera.h"
 
 
 struct Shader
@@ -22,6 +23,8 @@ unsigned int LinkShaders(unsigned int vertexShader, unsigned int fragmentShader)
 void DeleteShader(unsigned int shader);
 
 void SetUniformFloat(Shader shader, const char* name, float value);
+void SetUniformMat4(Shader shader, const char* name, hmm_mat4 value);
+void SetCameraUniforms(Shader shader, Camera camera);
 
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath);
 

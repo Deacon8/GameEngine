@@ -12,6 +12,7 @@ model LoadOBJ(char* path)
 	//Using this for size
 	const int i = GetFileSize(path);
 	
+	//Fix Sizes
 	hmm_vec3 temp_vertices[50];
 	unsigned int vindex = 0;
 	hmm_vec2 temp_uvs[50];

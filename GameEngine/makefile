@@ -1,25 +1,28 @@
 IDIR =./include
 CC=gcc
 CFLAGS=-I$(IDIR)
+OUTPUT=bin/Game
 
-ODIR= ./src
+SDIR=./src
+#Should be ./obj but it works
+ODIR=./src
 
 LIBS= -lopengl32 -lgdi32 -lmingw32 -L./libs -lglfw3
 
-_DEPS = glad/glad.h glfw/glfw.h shader.h model.h memory.h HandmadeMath.h
+_DEPS = glad/glad.h glfw/glfw.h shader.h model.h memory.h camera.h HandmadeMath.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.c glad.c shader.c model.c memory.c
+_OBJ = main.o glad.o shader.o model.o memory.o camera.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
-$(ODIR)/%.o: %.c $(DEPS)
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-bin/Game: $(OBJ)
+$(OUTPUT): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ 
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~  
