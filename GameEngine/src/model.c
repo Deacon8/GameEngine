@@ -48,6 +48,7 @@ model LoadOBJ(char* path)
 				hmm_vec3 vertex;
 				fscanf(file, "%f %f %f\n", &vertex.X, &vertex.Y, &vertex.Z );
 				temp_vertices[vindex] = vertex;
+				//printf("VVVV %f , %f , %f\n", vertex.X, vertex.Y, vertex.Z);
 				vindex++;
 			}
 			else if ( strcmp( lineHeader, "vt" ) == 0 )
@@ -104,33 +105,54 @@ model LoadOBJ(char* path)
 		}
 			
 	}
-	
+	//Move to top - this is stupid
 	//Might destroy pointers ince local?
 	model out;
 	out.vertices = malloc(sizeof(float) * vindex);
 	out.vsize = vindex;
+	out.vindices = malloc(sizeof(unsigned int) * viindex);
+	out.visize = viindex;
 	out.uvs = malloc(sizeof(float) * uindex);
 	out.usize = uindex;
+	out.uindices = malloc(sizeof(unsigned int) * uiindex);
+	out.uisize = uiindex;
 	out.normals = malloc(sizeof(float) * nindex);
 	out.nsize = nindex;
+	out.nindices = malloc(sizeof(unsigned int) * niindex);
+	out.nisize = niindex;
+	//out.isize = 
 	
 	// For each vertex of each triangle
-	for( unsigned int i=0; i<vindex; i++ ){
+	for( unsigned int i = 0; i<vindex; i++ ){
 
 		// Get the indices of its attributes
-		unsigned int vertexIndex = vertexIndices[i];
-		unsigned int uvIndex = uvIndices[i];
-		unsigned int normalIndex = normalIndices[i];
+		//unsigned int vertexIndex = vertexIndices[i];
+		//unsigned int uvIndex = uvIndices[i];
+		//unsigned int normalIndex = normalIndices[i];
 		
 		// Get the attributes thanks to the index
 		//-1 because obj starts at 1??
-		hmm_vec3 vertex = temp_vertices[ vertexIndex-1 ];
-		hmm_vec2 uv = temp_uvs[ uvIndex-1 ];
-		hmm_vec3 normal = temp_normals[ normalIndex-1 ];
+		//hmm_vec3 vertex = temp_vertices[ vertexIndex-1 ];
+		//hmm_vec2 uv = temp_uvs[ uvIndex-1 ];
+		//hmm_vec3 normal = temp_normals[ normalIndex-1 ];
 		
-		out.vertices[i] = vertex;
-		out.uvs[i] = uv;
-		out.normals[i] = normal;
+		out.vertices[i] = temp_vertices[i];
+		//printf("VVVV %f , %f , %f\n", out.vertices[i].X, out.vertices[i].Y, out.vertices[i].Z);
+		//out.normals[i] = temp_normals[i];
+	}
+	for(unsigned int i = 0; i < uindex; i++)
+	{
+		out.uvs[i] = temp_uvs[i];
+	}
+	for(unsigned int i = 0; i < nindex; i++)
+	{
+		out.normals[i] = temp_normals[i];
+	}
+	for(unsigned int i = 0; i < viindex; i++)
+	{
+		out.vindices[i] = vertexIndices[i];
+		out.uindices[i] = uvIndices[i];
+		out.nindices[i] = normalIndices[i];
 	}
 
 	return out;

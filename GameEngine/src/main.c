@@ -49,45 +49,25 @@ int main()
 		-0.5f,  0.5f, 0.0f   // top left 
 	};
 
-	float cvertices[] = 
-	{
-		-0.500000, -0.500000, 0.500000,
-		0.500000, -0.500000, 0.500000,
-		-0.500000, 0.500000, 0.500000,
-		0.500000, 0.500000, 0.500000,
-		-0.500000, 0.500000, -0.500000,
-		0.500000, 0.500000, -0.500000,
-		-0.500000, -0.500000, -0.500000,
-		0.500000, -0.500000, -0.500000
-	};
-
-	unsigned int cindices[] = 
-	{
-		0, 1, 2,    // side 1
-        2, 1, 3,
-        4, 0, 6,    // side 2
-        6, 0, 2,
-        7, 5, 6,    // side 3
-        6, 5, 4,
-        3, 1, 7,    // side 4
-        7, 1, 5,
-        4, 5, 0,    // side 5
-        0, 5, 1,
-        3, 7, 2,    // side 6
-        2, 7, 6
-	};
 	unsigned int indices[] = 
 	{  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
-	}; 
+	};
 
 	//Local Transform of GO
 	hmm_mat4 transform = HMM_Rotate(HMM_ToRadians(45), HMM_Vec3(1, 0, 0));
 	
 	model test = LoadOBJ("res/models/cube.obj");
 	printf("vWorks: %i\n", test.vsize);
-	printf("iWorks: %i\n", test.isize);
+	printf("iWorks: %i\n", test.visize);
+	for(int i = 0; i < test.visize; i++)
+	{
+		//printf(" %u", test.vindices[i]);//.Elements[0]);
+		//printf("V: %f", test.vindices[i].Elements[1]);
+		//printf("V: %f\n", test.vindices[i].Elements[2]);
+	}
+
 	//printf(test.indices);
 
     unsigned int VBO, VAO, EBO;
@@ -98,10 +78,10 @@ int main()
     glBindVertexArray(VAO);
 	
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (test.vsize) * sizeof(hmm_vec3), test.vertices, GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), test.vindices, GL_STATIC_DRAW);
 	
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -117,7 +97,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader.ShaderProgram);
 		SetUniformFloat(shader, "time", glfwGetTime());
-		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime()), HMM_Vec3(0, 0, 1));;
+		//transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 0, 1));;
+		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 1, 0));;
+		//printf("-%f-%f-%f-%f", transform.Elements[0][0], transform.Elements[0][1], transform.Elements[0][2], transform.Elements[0][3]);
+		camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
         glBindVertexArray(VAO);

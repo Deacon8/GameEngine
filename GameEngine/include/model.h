@@ -11,8 +11,14 @@ struct model
 	hmm_vec3* normals;
 	int nsize;
 	
-	unsigned int* indices;
-	int isize;
+	unsigned int* vindices;
+	int visize;
+
+	unsigned int* uindices;
+	int uisize;
+
+	unsigned int* nindices;
+	int nisize;
 };
 typedef struct model model;
 
