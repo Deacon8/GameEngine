@@ -4,10 +4,14 @@
 //#define GLFW_DLL
 #include "glfw/glfw3.h"
 
+#include "HandmadeMath.h"
+#include "stb_image.h"
+
 #include "memory.h"
 #include "shader.h"
 #include "model.h"
 #include "camera.h"
+#include "texture.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 void ErrorCallback(int i, const char* err_str);
@@ -32,6 +36,8 @@ int main()
 		glfwTerminate();
         return -1;
     }
+	//glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);  
 	//glViewport(0, 0, 800, 600);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetErrorCallback(ErrorCallback);
@@ -40,35 +46,13 @@ int main()
 
 	Shader shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/crazy.frag");
 	SetUniformFloat(shader, "time", 0.0f);
-	
-    float vertices[] = 
-	{
-		 0.5f,  0.5f, 0.0f,  // top right
-		 0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
-	};
 
-	unsigned int indices[] = 
-	{  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
+	Texture texture = LoadTexture("res/cube.png");
 
 	//Local Transform of GO
 	hmm_mat4 transform = HMM_Rotate(HMM_ToRadians(45), HMM_Vec3(1, 0, 0));
 	
 	model test = LoadOBJ("res/models/cube.obj");
-	printf("vWorks: %i\n", test.vsize);
-	printf("iWorks: %i\n", test.visize);
-	for(int i = 0; i < test.visize; i++)
-	{
-		//printf(" %u", test.vindices[i]);//.Elements[0]);
-		//printf("V: %f", test.vindices[i].Elements[1]);
-		//printf("V: %f\n", test.vindices[i].Elements[2]);
-	}
-
-	//printf(test.indices);
 
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -88,8 +72,6 @@ int main()
 	
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-	
-	//printf("Q");
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -100,12 +82,13 @@ int main()
 		//transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 0, 1));;
 		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 1, 0));;
 		//printf("-%f-%f-%f-%f", transform.Elements[0][0], transform.Elements[0][1], transform.Elements[0][2], transform.Elements[0][3]);
-		camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
+		//camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
+		SetCamPos(&camera, HMM_Vec3(0, 0, -100));
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
         glBindVertexArray(VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		//Throws Error??
 		//printf("F");

@@ -9,10 +9,10 @@ ODIR=./src
 
 LIBS= -lopengl32 -lgdi32 -lmingw32 -L./libs -lglfw3
 
-_DEPS = glad/glad.h glfw/glfw.h shader.h model.h memory.h camera.h HandmadeMath.h
+_DEPS = glad/glad.h glfw/glfw.h shader.h model.h texture.h memory.h camera.h stb_image.h HandmadeMath.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o glad.o shader.o model.o memory.o camera.o
+_OBJ = main.o glad.o shader.o model.o memory.o camera.o texture.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
@@ -25,4 +25,4 @@ $(OUTPUT): $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~  
+	del .\src\*.o
