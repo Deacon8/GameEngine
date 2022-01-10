@@ -25,7 +25,7 @@ void DeleteShader(unsigned int shader);
 void SetUniformFloat(Shader shader, const char* name, float value);
 void SetUniformMat4(Shader shader, const char* name, hmm_mat4 value);
 void SetCameraUniforms(Shader shader, Camera camera);
-void SetUniformSampler2D(Shader shader, const char* name, int unit);
+void SetUniformSampler2D(Shader shader, const char* name, unsigned int unit);
 
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath);
 

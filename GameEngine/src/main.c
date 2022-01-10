@@ -38,7 +38,8 @@ int main()
     }
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);  
-	glDisable(GL_CULL_FACE);  
+	glDisable(GL_CULL_FACE); 
+	//glDisable(GL_ALPHA_TEST); 
 	//glViewport(0, 0, 800, 600);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetErrorCallback(ErrorCallback);
@@ -53,17 +54,17 @@ int main()
 
 	//Local Transform of GO
 	hmm_mat4 transform = HMM_Rotate(HMM_ToRadians(45), HMM_Vec3(1, 0, 0));
-	
+
 	//printf("as");
 	model test = LoadOBJ("res/models/cube.obj");
 	//printf("asdf");
 	for(int i = 0; i < test.visize; i++)
 	{
-		printf("v%f, %f, %f, u%f, %f, n%f, %f, %f, %u\n"
+		printf("v%f, %f, %f, u%f, %f, n%f, %f, %f, %u, %u, %u\n"
 		, test.vertices[i].Elements[0], test.vertices[i].Elements[1], test.vertices[i].Elements[2]
 		, test.uvs[i].Elements[0], test.uvs[i].Elements[1]
 		, test.normals[i].Elements[0], test.normals[i].Elements[1], test.normals[i].Elements[2]
-		, test.vindices[i]);
+		, test.vindices[i], test.uindices[i], test.nindices[i]);
 	}
 
     unsigned int VAO, EBO;
@@ -73,11 +74,11 @@ int main()
 	glGenBuffers(1, &ubuffer);
 	glGenBuffers(1, &nbuffer);
 	glGenBuffers(1, &EBO);
-	
+
     glBindVertexArray(VAO);
 	
-	printf("\naksnklas: %u\n", test.visize);
-	printf("aksnklas: %u\n", test.vsize);
+	//printf("\naksnklas: %u\n", test.visize);
+	//printf("aksnklas: %u\n", test.vsize);
 
 	//Using STATIC DRAW
     glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
@@ -88,10 +89,9 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, nbuffer);
     glBufferData(GL_ARRAY_BUFFER, (test.nisize) * sizeof(hmm_vec3), &test.normals->Elements[0], GL_STATIC_DRAW);
-	
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), &test.vindices[0], GL_STATIC_DRAW);
-	
 	//is this local or global?
 	//vert
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -102,29 +102,26 @@ int main()
 	//normal
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(2);
-	
+	//glGetNamedBufferSubData();
+
 	//Unneccessary
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 
+    glBindVertexArray(0);
 	printf("gwewe");
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader.ShaderProgram);
-
 		//
-		SetTexture(texture, 0);
+		SetTexture(texture, 0);		
 		SetUniformSampler2D(shader, "intexture", 0);
-
 		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 1000), HMM_Vec3(0, 1, 0));;
-
 		//camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
 		SetCamPos(&camera, HMM_Vec3(0, 0, -100));
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
-		
         glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

@@ -146,8 +146,8 @@ model LoadOBJ(char* path)
 	for(unsigned int i = 0; i < viindex; i++)
 	{
 		out.vindices[i] = vertexIndices[i];
-		printf("%u\n", out.vindices[i]);
-		printf("%u\n", vertexIndices[i]);
+		//printf("%u\n", out.vindices[i]);
+		//printf("%u\n", vertexIndices[i]);
 		out.uindices[i] = uvIndices[i];
 		out.nindices[i] = normalIndices[i];
 	}
