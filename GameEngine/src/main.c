@@ -37,6 +37,7 @@ int main()
         return -1;
     }
 	//glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);  
 	glDisable(GL_CULL_FACE);  
 	//glViewport(0, 0, 800, 600);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -44,51 +45,91 @@ int main()
 	
 	Camera camera = newCamera(HMM_Vec3(0, 0, -100));
 
-	Shader shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/crazy.frag");
-	SetUniformFloat(shader, "time", 0.0f);
+	Shader shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/texture.frag");
+	//Shader shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/crazy.frag");
+	//SetUniformFloat(shader, "time", 0.0f);
 
-	Texture texture = LoadTexture("res/cube.png");
+	Texture texture = LoadTexture("res/models/cat.jpg");
 
 	//Local Transform of GO
 	hmm_mat4 transform = HMM_Rotate(HMM_ToRadians(45), HMM_Vec3(1, 0, 0));
 	
+	//printf("as");
 	model test = LoadOBJ("res/models/cube.obj");
+	//printf("asdf");
+	for(int i = 0; i < test.visize; i++)
+	{
+		printf("v%f, %f, %f, u%f, %f, n%f, %f, %f, %u\n"
+		, test.vertices[i].Elements[0], test.vertices[i].Elements[1], test.vertices[i].Elements[2]
+		, test.uvs[i].Elements[0], test.uvs[i].Elements[1]
+		, test.normals[i].Elements[0], test.normals[i].Elements[1], test.normals[i].Elements[2]
+		, test.vindices[i]);
+	}
 
-    unsigned int VBO, VAO, EBO;
+    unsigned int VAO, EBO;
+	unsigned int vbuffer, ubuffer, nbuffer;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &vbuffer);
+	glGenBuffers(1, &ubuffer);
+	glGenBuffers(1, &nbuffer);
 	glGenBuffers(1, &EBO);
 	
     glBindVertexArray(VAO);
 	
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, (test.vsize) * sizeof(hmm_vec3), test.vertices, GL_STATIC_DRAW);
+	printf("\naksnklas: %u\n", test.visize);
+	printf("aksnklas: %u\n", test.vsize);
+
+	//Using STATIC DRAW
+    glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+    glBufferData(GL_ARRAY_BUFFER, (test.visize) * sizeof(hmm_vec3), &test.vertices->Elements[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, ubuffer);
+    glBufferData(GL_ARRAY_BUFFER, (test.uisize) * sizeof(hmm_vec2), &test.uvs->Elements[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, nbuffer);
+    glBufferData(GL_ARRAY_BUFFER, (test.nisize) * sizeof(hmm_vec3), &test.normals->Elements[0], GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), test.vindices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), &test.vindices[0], GL_STATIC_DRAW);
 	
+	//is this local or global?
+	//vert
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+	//uv
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+	//normal
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(2);
 	
+	//Unneccessary
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+	printf("gwewe");
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader.ShaderProgram);
-		SetUniformFloat(shader, "time", glfwGetTime());
-		//transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 0, 1));;
-		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 100), HMM_Vec3(0, 1, 0));;
-		//printf("-%f-%f-%f-%f", transform.Elements[0][0], transform.Elements[0][1], transform.Elements[0][2], transform.Elements[0][3]);
+
+		//
+		SetTexture(texture, 0);
+		SetUniformSampler2D(shader, "intexture", 0);
+
+		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 1000), HMM_Vec3(0, 1, 0));;
+
 		//camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
 		SetCamPos(&camera, HMM_Vec3(0, 0, -100));
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
+		
         glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		glfwSwapBuffers(window);
 		//Throws Error??
 		//printf("F");

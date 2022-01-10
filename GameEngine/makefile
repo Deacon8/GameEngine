@@ -1,6 +1,6 @@
 IDIR =./include
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -g
 OUTPUT=bin/Game
 
 SDIR=./src

@@ -1,13 +1,14 @@
 #include "texture.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "glad.h"
+#include "glad/glad.h"
 
-Texture LoadTexture1(const char* image)
+Texture LoadTexture(const char* image)
 {
     Texture local;
     local.data = stbi_load(image, &local.width, &local.height, &local.nrChannels, 0); 
     //free memory?
-    if(!local.data){printf("Texture Failed tp Load");}
+    if(!local.data){printf("Texture Failed to Load");}
 
     //Nevermind - Basic Parameters - Maybe dont assign each time lol
 

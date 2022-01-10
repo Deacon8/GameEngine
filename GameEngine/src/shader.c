@@ -105,6 +105,13 @@ void SetCameraUniforms(Shader shader, Camera camera)
 	glUniformMatrix4fv(projloc, 1, GL_FALSE, (const GLfloat*)&camera.projection.Elements[0]);
 }
 
+void SetUniformSampler2D(Shader shader, const char* name, int unit)
+{
+	int loc = glGetUniformLocation(shader.ShaderProgram, name);
+	glUseProgram(shader.ShaderProgram);
+	glUniform1i(loc, GL_TEXTURE0 + unit);
+}
+
 Shader LazyLoadShader(char* VertexShaderPath, char* FragmentShaderPath)
 {	
 	Shader shader;

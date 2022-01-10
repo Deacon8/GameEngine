@@ -8,6 +8,6 @@ struct Texture
     unsigned int tex;
 };typedef struct Texture Texture;
 
-Texture Loadtexture(const char* image);
+Texture LoadTexture(const char* image);
 
 void SetTexture(Texture texture, unsigned int binding);

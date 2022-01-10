@@ -20,9 +20,9 @@ model LoadOBJ(char* path)
 	hmm_vec3 temp_normals[50];
 	unsigned int nindex = 0;
 	
-	unsigned int vertexIndices[500];
-	unsigned int uvIndices[500];
-	unsigned int normalIndices[500];
+	unsigned int vertexIndices[100];
+	unsigned int uvIndices[100];
+	unsigned int normalIndices[100];
 	unsigned int viindex = 0;
 	unsigned int uiindex = 0;
 	unsigned int niindex = 0;
@@ -81,6 +81,7 @@ model LoadOBJ(char* path)
 				viindex++;
 				vertexIndices[viindex] = vertexIndex[2];
 				viindex++;
+				
 				//Uv
 				uvIndices[uiindex] = uvIndex[0];
 				uiindex++;
@@ -98,47 +99,67 @@ model LoadOBJ(char* path)
 			}
 			else
 			{
-				// Probably a comment, eat up the rest of the line
+				// there has to be a better way to do this
 				char stupidBuffer[1000];
 				fgets(stupidBuffer, 1000, file);
 			}
 		}
 			
 	}
-	//Move to top - this is stupid
-	//Might destroy pointers ince local?
+	//Nevermind - Move to top - this is stupid
+
+	//Might destroy pointers since local?
 	model out;
-	out.vertices = malloc(sizeof(float) * vindex);
+	out.vertices = malloc(sizeof(hmm_vec3) * viindex);
 	out.vsize = vindex;
 	out.vindices = malloc(sizeof(unsigned int) * viindex);
 	out.visize = viindex;
-	out.uvs = malloc(sizeof(float) * uindex);
+	out.uvs = malloc(sizeof(hmm_vec2) * uiindex);
 	out.usize = uindex;
 	out.uindices = malloc(sizeof(unsigned int) * uiindex);
 	out.uisize = uiindex;
-	out.normals = malloc(sizeof(float) * nindex);
+	out.normals = malloc(sizeof(hmm_vec3) * niindex);
 	out.nsize = nindex;
 	out.nindices = malloc(sizeof(unsigned int) * niindex);
 	out.nisize = niindex;
 	//out.isize = 
 	
-	// For each vertex of each triangle
-	for( unsigned int i = 0; i<vindex; i++ ){
+		// For each vertex of each triangle
+	for( unsigned int i = 0; i < viindex; i++)
+	{
 
 		// Get the indices of its attributes
-		//unsigned int vertexIndex = vertexIndices[i];
-		//unsigned int uvIndex = uvIndices[i];
-		//unsigned int normalIndex = normalIndices[i];
+		unsigned int vertexIndex = vertexIndices[i];
+		unsigned int uvIndex = uvIndices[i];
+		unsigned int normalIndex = normalIndices[i];
 		
 		// Get the attributes thanks to the index
-		//-1 because obj starts at 1??
-		//hmm_vec3 vertex = temp_vertices[ vertexIndex-1 ];
-		//hmm_vec2 uv = temp_uvs[ uvIndex-1 ];
-		//hmm_vec3 normal = temp_normals[ normalIndex-1 ];
+		hmm_vec3 vertex = temp_vertices[ vertexIndex-1 ];
+		hmm_vec2 uv = temp_uvs[ uvIndex-1 ];
+		hmm_vec3 normal = temp_normals[ normalIndex-1 ];
 		
+		// Put the attributes in buffers
+		out.vertices[i] = vertex;
+		out.uvs[i] = uv;
+		out.normals[i] = normal;
+	}
+	for(unsigned int i = 0; i < viindex; i++)
+	{
+		out.vindices[i] = vertexIndices[i];
+		printf("%u\n", out.vindices[i]);
+		printf("%u\n", vertexIndices[i]);
+		out.uindices[i] = uvIndices[i];
+		out.nindices[i] = normalIndices[i];
+	}
+	//Pick whichever one works
+	
+	//This is very inefficent
+
+	// For each vertex of each triangle
+	/*
+	for( unsigned int i = 0; i<vindex; i++ ){
+
 		out.vertices[i] = temp_vertices[i];
-		//printf("VVVV %f , %f , %f\n", out.vertices[i].X, out.vertices[i].Y, out.vertices[i].Z);
-		//out.normals[i] = temp_normals[i];
 	}
 	for(unsigned int i = 0; i < uindex; i++)
 	{
@@ -154,6 +175,8 @@ model LoadOBJ(char* path)
 		out.uindices[i] = uvIndices[i];
 		out.nindices[i] = normalIndices[i];
 	}
-
+	*/
+	//printf("seg");
+	//fclose(file);
 	return out;
 }
