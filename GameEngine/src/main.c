@@ -66,13 +66,17 @@ int main()
 		, test.normals[i].Elements[0], test.normals[i].Elements[1], test.normals[i].Elements[2]
 		, test.vindices[i], test.uindices[i], test.nindices[i]);
 	}
+	for(int i = 0; i < test.allsize; i++)
+	{
+		printf("a%f\n", test.all[i]);
+	}
 
-    unsigned int VAO, EBO;
-	unsigned int vbuffer, ubuffer, nbuffer;
+    unsigned int vbuffer, ubuffer, nbuffer, VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &vbuffer);
-	glGenBuffers(1, &ubuffer);
-	glGenBuffers(1, &nbuffer);
+    //glGenBuffers(1, &vbuffer);
+	//glGenBuffers(1, &ubuffer);
+	//glGenBuffers(1, &nbuffer);
+	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
@@ -81,7 +85,11 @@ int main()
 	//printf("aksnklas: %u\n", test.vsize);
 
 	//Using STATIC DRAW
-    glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+	printf("%u\n", vbuffer);
+	printf("%u\n", test.visize);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, test.allsize*sizeof(float), &test.all[0], GL_STATIC_DRAW);
+    /*glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
     glBufferData(GL_ARRAY_BUFFER, (test.visize) * sizeof(hmm_vec3), &test.vertices->Elements[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, ubuffer);
@@ -89,10 +97,9 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, nbuffer);
     glBufferData(GL_ARRAY_BUFFER, (test.nisize) * sizeof(hmm_vec3), &test.normals->Elements[0], GL_STATIC_DRAW);
-
+*/
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), &test.vindices[0], GL_STATIC_DRAW);
-	//is this local or global?
 	//vert
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -103,12 +110,12 @@ int main()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 	//
-
+	//printf("%u\n%u", sizeof(hmm_vec3), sizeof(float));
 	//Unneccessary
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
-	printf("gwewe");
+	//printf("gwewe");
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -124,16 +131,11 @@ int main()
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
         glBindVertexArray(VAO);
-		//float* data = malloc(sizeof(int) * 12);
-		//glGetBufferSubData(GL_ARRAY_BUFFER, 0, 12, data);
-		//for(int i = 0; i < 12; i++)
-		//{
-		//	printf("D: %f\n", data[i]);
-		//}
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		glfwSwapBuffers(window);
 		//Throws Error??
 		//printf("F");

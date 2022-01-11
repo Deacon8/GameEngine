@@ -122,7 +122,8 @@ model LoadOBJ(char* path)
 	out.nsize = nindex;
 	out.nindices = malloc(sizeof(unsigned int) * niindex);
 	out.nisize = niindex;
-	//out.isize = 
+	out.all = malloc(sizeof(float) * 8 * out.visize);
+	out.allsize = viindex + niindex + uiindex;
 	
 		// For each vertex of each triangle
 	for( unsigned int i = 0; i < viindex; i++)
@@ -150,6 +151,17 @@ model LoadOBJ(char* path)
 		//printf("%u\n", vertexIndices[i]);
 		out.uindices[i] = uvIndices[i];
 		out.nindices[i] = normalIndices[i];
+	}
+	for(int i = 0; i < out.visize; i++)
+	{
+		out.all[i*8] = out.vertices[i].Elements[0];
+		out.all[(i*8)+1] = out.vertices[i].Elements[1];
+		out.all[(i*8)+2] = out.vertices[i].Elements[2];
+		out.all[(i*8)+3] = out.uvs[i].Elements[0];
+		out.all[(i*8)+4] = out.uvs[i].Elements[1];
+		out.all[(i*8)+5] = out.normals[i].Elements[0];
+		out.all[(i*8)+6] = out.normals[i].Elements[1];
+		out.all[(i*8)+7] = out.normals[i].Elements[2];
 	}
 	//Pick whichever one works
 	
@@ -180,3 +192,5 @@ model LoadOBJ(char* path)
 	//fclose(file);
 	return out;
 }
+
+// Returns true iif v1 can be considered equal to v2

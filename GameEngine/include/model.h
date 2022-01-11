@@ -10,6 +10,9 @@ struct model
 	
 	hmm_vec3* normals;
 	int nsize;
+
+	float* all;
+	unsigned int allsize;
 	
 	unsigned int* vindices;
 	int visize;
@@ -19,6 +22,9 @@ struct model
 
 	unsigned int* nindices;
 	int nisize;
+
+	unsigned int* finalindices;
+	int fisize;
 };
 typedef struct model model;
 
