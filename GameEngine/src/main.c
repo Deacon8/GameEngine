@@ -90,19 +90,19 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, nbuffer);
     glBufferData(GL_ARRAY_BUFFER, (test.nisize) * sizeof(hmm_vec3), &test.normals->Elements[0], GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), &test.vindices[0], GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, test.visize * sizeof(unsigned int), &test.vindices[0], GL_STATIC_DRAW);
 	//is this local or global?
 	//vert
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 	//uv
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 	//normal
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
-	//glGetNamedBufferSubData();
+	//
 
 	//Unneccessary
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -118,15 +118,22 @@ int main()
 		SetTexture(texture, 0);		
 		SetUniformSampler2D(shader, "intexture", 0);
 		transform = HMM_Rotate(HMM_ToRadians(glfwGetTime() * 1000), HMM_Vec3(0, 1, 0));;
+		//transform = HMM_Mat4();
 		//camera.view = translateCamera(&camera, HMM_Vec3(0, 0, -0.01));
 		SetCamPos(&camera, HMM_Vec3(0, 0, -100));
 		SetUniformMat4(shader, "model", transform);
 		SetCameraUniforms(shader, camera);
         glBindVertexArray(VAO);
+		//float* data = malloc(sizeof(int) * 12);
+		//glGetBufferSubData(GL_ARRAY_BUFFER, 0, 12, data);
+		//for(int i = 0; i < 12; i++)
+		//{
+		//	printf("D: %f\n", data[i]);
+		//}
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glfwSwapBuffers(window);
 		//Throws Error??
 		//printf("F");
