@@ -1,6 +1,6 @@
 #pragma once
 #include "HandmadeMath.h"
-struct model
+struct Model
 {
 	hmm_vec3* vertices;
 	int vsize;
@@ -25,7 +25,9 @@ struct model
 
 	unsigned int* finalindices;
 	int fisize;
-};
-typedef struct model model;
 
-model LoadOBJ(char* path);
+	unsigned int VAO;
+};
+typedef struct Model Model;
+
+Model LoadOBJ(char* path);

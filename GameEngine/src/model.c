@@ -1,28 +1,30 @@
 #include "model.h"
 #include "memory.h"
 #include "HandmadeMath.h"
+#include "glad/glad.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 //FIX MEMORY - linked list??
 
-model LoadOBJ(char* path)
+Model LoadOBJ(char* path)
 {	
+	//printf("Started Loading Model...\n");
 	//Using this for size
-	const int i = GetFileSize(path);
+	const int s = GetFileSize(path);
 	
 	//Fix Sizes
-	hmm_vec3 temp_vertices[50];
+	hmm_vec3* temp_vertices = malloc(sizeof(hmm_vec3) * s/2);
 	unsigned int vindex = 0;
-	hmm_vec2 temp_uvs[50];
+	hmm_vec2* temp_uvs = malloc(sizeof(hmm_vec2) * s/2);
 	unsigned int uindex = 0;
-	hmm_vec3 temp_normals[50];
+	hmm_vec3* temp_normals = malloc(sizeof(hmm_vec3) * s/2);
 	unsigned int nindex = 0;
 	
-	unsigned int vertexIndices[100];
-	unsigned int uvIndices[100];
-	unsigned int normalIndices[100];
+	unsigned int* vertexIndices = malloc(sizeof(unsigned int) * s/5);
+	unsigned int* uvIndices = malloc(sizeof(unsigned int) * s/5);
+	unsigned int* normalIndices = malloc(sizeof(unsigned int) * s/5);
 	unsigned int viindex = 0;
 	unsigned int uiindex = 0;
 	unsigned int niindex = 0;
@@ -35,6 +37,7 @@ model LoadOBJ(char* path)
 	while(1)
 	{	
 		//Only 128??
+		//printf("Loading...");
 		char lineHeader[128];
 		int res = fscanf(file, "%s", lineHeader);
 		if (res == EOF)
@@ -106,10 +109,11 @@ model LoadOBJ(char* path)
 		}
 			
 	}
+	//printf("Done");
 	//Nevermind - Move to top - this is stupid
 
 	//Might destroy pointers since local?
-	model out;
+	Model out;
 	out.vertices = malloc(sizeof(hmm_vec3) * viindex);
 	out.vsize = vindex;
 	out.vindices = malloc(sizeof(unsigned int) * viindex);
@@ -123,7 +127,7 @@ model LoadOBJ(char* path)
 	out.nindices = malloc(sizeof(unsigned int) * niindex);
 	out.nisize = niindex;
 	out.all = malloc(sizeof(float) * 8 * out.visize);
-	out.allsize = viindex + niindex + uiindex;
+	out.allsize = viindex * 8;
 	
 		// For each vertex of each triangle
 	for( unsigned int i = 0; i < viindex; i++)
@@ -163,34 +167,36 @@ model LoadOBJ(char* path)
 		out.all[(i*8)+6] = out.normals[i].Elements[1];
 		out.all[(i*8)+7] = out.normals[i].Elements[2];
 	}
-	//Pick whichever one works
+	fclose(file);
+
+	//Buffers
+	unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+
+	glGenBuffers(1, &VBO);
 	
-	//This is very inefficent
+    glBindVertexArray(VAO);
 
-	// For each vertex of each triangle
-	/*
-	for( unsigned int i = 0; i<vindex; i++ ){
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, out.allsize*sizeof(float), &out.all[0], GL_STATIC_DRAW);
 
-		out.vertices[i] = temp_vertices[i];
-	}
-	for(unsigned int i = 0; i < uindex; i++)
-	{
-		out.uvs[i] = temp_uvs[i];
-	}
-	for(unsigned int i = 0; i < nindex; i++)
-	{
-		out.normals[i] = temp_normals[i];
-	}
-	for(unsigned int i = 0; i < viindex; i++)
-	{
-		out.vindices[i] = vertexIndices[i];
-		out.uindices[i] = uvIndices[i];
-		out.nindices[i] = normalIndices[i];
-	}
-	*/
-	//printf("seg");
-	//fclose(file);
+	//vert
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+	//uv
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+	//normal
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+	//
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+	out.VAO = VAO;
+
 	return out;
+	//printf("Finished Loading Model");
 }
-
-// Returns true iif v1 can be considered equal to v2

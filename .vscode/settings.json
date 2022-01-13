@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "glfw3.h": "c",
-        "stb_image.h": "c"
+        "stb_image.h": "c",
+        "texture.h": "c",
+        "components.h": "c",
+        "transform.h": "c",
+        "renderer.h": "c",
+        "entity.h": "c",
+        "engine.h": "c"
     }
 }
