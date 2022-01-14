@@ -101,7 +101,7 @@ void SetCameraUniforms(Shader shader, Camera camera)
 	int projloc = glGetUniformLocation(shader.ShaderProgram, "projection");
 	glUseProgram(shader.ShaderProgram);
 	//glUniformMatrix4fv(modelloc, 1, GL_FALSE, &camera.model.Elements[0]);
-	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&camera.view.Elements[0]);
+	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&camera.transform.final.Elements[0]);
 	glUniformMatrix4fv(projloc, 1, GL_FALSE, (const GLfloat*)&camera.projection.Elements[0]);
 }
 

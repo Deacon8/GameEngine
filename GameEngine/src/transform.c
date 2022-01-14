@@ -1,10 +1,11 @@
 #include "HandmadeMath.h"
 #include "transform.h"
+#include "utilities.h"
 
 void calcTransform(Transform* transform)
 {
     hmm_mat4 pos = HMM_Translate(transform->position);
-    hmm_mat4 rot = HMM_Rotate(100, transform->rotation);
+    hmm_mat4 rot = HMM_QuaternionToMat4(EulerToQuat(transform->rotation));
     hmm_mat4 scale = HMM_Scale(transform->scale);
     hmm_mat4 final = HMM_MultiplyMat4(pos, HMM_MultiplyMat4(rot, scale));
     transform->final = final;
@@ -17,7 +18,7 @@ Transform CreateNewTransform()
     transform.rotation = HMM_Vec3(0, 0, 0);
     transform.scale = HMM_Vec3(1, 1, 1);
     hmm_mat4 pos = HMM_Translate(transform.position);
-    hmm_mat4 rot = HMM_Rotate(100, transform.rotation);
+    hmm_mat4 rot = HMM_QuaternionToMat4(EulerToQuat(transform.rotation));
     hmm_mat4 scale = HMM_Scale(transform.scale);
     hmm_mat4 final = HMM_MultiplyMat4(pos, HMM_MultiplyMat4(rot, scale));
     transform.final = final;

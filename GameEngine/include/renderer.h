@@ -7,10 +7,14 @@ struct Renderer
 {
     Model model;
     Shader shader;
+    short hastexture;
+    Texture texture;
 };
 typedef struct Renderer Renderer;
+
+#include "entity.h"
 
 void PreDraw();
 void PostDraw();
 
-void DrawEntity(Renderer renderer, Camera camera);
+void DrawEntity(Entity entity, Camera camera);

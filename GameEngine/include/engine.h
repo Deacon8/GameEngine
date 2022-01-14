@@ -1,5 +1,15 @@
 #pragma once
 
+//forward definitions
+struct Entity;
+typedef struct Entity Entity;
+struct Renderer;
+typedef struct Renderer Renderer;
+struct Transform;
+typedef struct Transform Transform;
+struct Texture;
+typedef struct Texture Texture;
+
 #include "glad/glad.h"
 //unnecessary??
 //#define GLFW_DLL

@@ -9,7 +9,7 @@ ODIR=./src
 
 LIBS= -lopengl32 -lgdi32 -lmingw32 -L./libs -lglfw3
 
-_DEPS = glad/glad.h glfw/glfw.h shader.h model.h texture.h memory.h camera.h transform.h renderer.h entity.h loader.h stb_image.h HandmadeMath.h engine.h
+_DEPS = glad/glad.h glfw/glfw.h shader.h model.h texture.h memory.h camera.h transform.h renderer.h entity.h loader.h stb_image.h utilities.h HandmadeMath.h engine.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = main.o glad.o shader.o model.o memory.o camera.o texture.o transform.o renderer.o entity.o
