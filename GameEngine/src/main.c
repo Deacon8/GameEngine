@@ -5,9 +5,10 @@ int main()
 {	
 	LoadGLFW();
 	LoadOpengl();
-
+	//HMM_qua
 	Entity entity;
 	entity.transform = CreateNewTransform();
+	scale(&entity.transform, HMM_Vec3(10, 10, 10));
 	entity.renderer.model = LoadOBJ("res/models/monkey.obj");
 	entity.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/texture.frag");
 	
@@ -16,9 +17,9 @@ int main()
 	Texture texture = LoadTexture("res/models/cat.jpg");
 
 	while(WindowOpen())
-	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	{	
+
+		PreDraw();
 
 		glUseProgram(entity.renderer.shader.ShaderProgram);
 
@@ -32,6 +33,7 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, entity.renderer.model.visize);
 
 		glfwSwapBuffers(window);
+
 		glfwPollEvents();
 	}
 	glfwTerminate();

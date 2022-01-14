@@ -1,3 +1,5 @@
+#pragma once
+
 #include "glad/glad.h"
 //unnecessary??
 //#define GLFW_DLL
@@ -10,9 +12,13 @@
 #include "shader.h"
 #include "model.h"
 #include "texture.h"
+
+GLFWwindow* window;
 #include "loader.h"
 
 #include "transform.h"
-#include "renderer.h"
 #include "camera.h"
+#include "renderer.h"
 #include "entity.h"
+
+//Add Global Stuff

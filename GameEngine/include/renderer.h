@@ -9,3 +9,8 @@ struct Renderer
     Shader shader;
 };
 typedef struct Renderer Renderer;
+
+void PreDraw();
+void PostDraw();
+
+void DrawEntity(Renderer renderer, Camera camera);
