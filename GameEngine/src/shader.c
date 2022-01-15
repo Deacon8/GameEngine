@@ -87,6 +87,13 @@ void SetUniformFloat(Shader shader, const char* name, float value)
 	glUniform1f(location, value);
 }
 
+void SetUniformVec3(Shader shader, const char* name, hmm_vec3 value)
+{
+	int location = glGetUniformLocation(shader.ShaderProgram, name);
+	glUseProgram(shader.ShaderProgram);
+	glUniform3fv(location, 3, &value.Elements[0]);
+}
+
 void SetUniformMat4(Shader shader, const char* name, hmm_mat4 value)
 {
 	int location = glGetUniformLocation(shader.ShaderProgram, name);

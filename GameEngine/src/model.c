@@ -179,7 +179,7 @@ Model LoadOBJ(char* path)
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, out.allsize*sizeof(float), &out.all[0], GL_STATIC_DRAW);
-
+	out.VAO = VAO;
 	//vert
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -190,13 +190,18 @@ Model LoadOBJ(char* path)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 	//
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
 
-	out.VAO = VAO;
+	free(temp_vertices);
+	free(temp_uvs);
+	free(temp_normals);
+	free(vertexIndices);
+	free(uvIndices);
+	free(normalIndices);
 
 	return out;
 	//printf("Finished Loading Model");
+	//remember to triangulate faces in blender
 }
