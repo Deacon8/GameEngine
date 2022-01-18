@@ -1,6 +1,6 @@
 #include "HandmadeMath.h"
-#include "transform.h"
 #include "utilities.h"
+#include "transform.h"
 
 void calcTransform(Transform* transform)
 {
@@ -20,7 +20,7 @@ Transform CreateNewTransform()
     hmm_mat4 pos = HMM_Translate(transform.position);
     hmm_mat4 rot = HMM_QuaternionToMat4(EulerToQuat(transform.rotation));
     hmm_mat4 scale = HMM_Scale(transform.scale);
-    hmm_mat4 final = HMM_MultiplyMat4(pos, HMM_MultiplyMat4(rot, scale));
+    hmm_mat4 final = HMM_MultiplyMat4(HMM_MultiplyMat4(scale, rot), pos);
     transform.final = final;
     return transform;
 }

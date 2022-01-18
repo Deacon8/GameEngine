@@ -8,15 +8,19 @@
 
 void DrawEntity(Entity entity, Camera camera)
 {	
-	//printf("%i\n", entity.renderer.shader.ShaderProgram);
     glUseProgram(entity.renderer.shader.ShaderProgram);
-	//printf("%i\n", glGetError());
-	if(entity.renderer.hastexture)
+	switch(entity.renderer.shadertype)
 	{
+		case basic_color:
+		SetUniformVec3(entity.renderer.shader, "incolor", entity.renderer.color);
+		//printf("2 %i\n", glGetError());
+		break;
+		case basic_texture:
 		SetTexture(entity.renderer.texture, 0);
 		SetUniformSampler2D(entity.renderer.shader, "intexture", 0);
+		break;
 	}
-	//printf("2%i\n", glGetError());
+	//printf("%i\n", glGetError());
 	SetUniformMat4(entity.renderer.shader, "model", entity.transform.final);
 	SetCameraUniforms(entity.renderer.shader, camera);
 	//printf("3%i\n", glGetError());

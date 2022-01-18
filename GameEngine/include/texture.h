@@ -11,3 +11,5 @@ struct Texture
 Texture LoadTexture(const char* image);
 
 void SetTexture(Texture texture, unsigned int binding);
+
+//Texture LoadCubemap();

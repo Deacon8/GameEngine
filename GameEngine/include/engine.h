@@ -16,6 +16,7 @@ typedef struct Texture Texture;
 #include "glfw/glfw3.h"
 
 #include "HandmadeMath.h"
+#include "utilities.h"
 #include "stb_image.h"
 
 #include "memory.h"
@@ -32,3 +33,5 @@ GLFWwindow* window;
 #include "entity.h"
 
 //Add Global Stuff
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;

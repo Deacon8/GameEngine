@@ -8,6 +8,7 @@
         "renderer.h": "c",
         "entity.h": "c",
         "engine.h": "c",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "utilities.h": "c"
     }
 }

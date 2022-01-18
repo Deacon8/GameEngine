@@ -3173,4 +3173,3 @@ HMM_INLINE hmm_vec4 operator-(hmm_vec4 In)
 #endif /* HANDMADE_MATH_H */
 
 
-

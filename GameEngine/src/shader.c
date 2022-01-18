@@ -91,7 +91,7 @@ void SetUniformVec3(Shader shader, const char* name, hmm_vec3 value)
 {
 	int location = glGetUniformLocation(shader.ShaderProgram, name);
 	glUseProgram(shader.ShaderProgram);
-	glUniform3fv(location, 3, &value.Elements[0]);
+	glUniform3fv(location, 1, &value.Elements[0]);
 }
 
 void SetUniformMat4(Shader shader, const char* name, hmm_mat4 value)
@@ -108,7 +108,9 @@ void SetCameraUniforms(Shader shader, Camera camera)
 	int projloc = glGetUniformLocation(shader.ShaderProgram, "projection");
 	glUseProgram(shader.ShaderProgram);
 	//glUniformMatrix4fv(modelloc, 1, GL_FALSE, &camera.model.Elements[0]);
-	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&camera.transform.final.Elements[0]);
+	hmm_mat4 view = GetCameraView(camera);
+	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&view.Elements[0]);
+	//camera.projection = HMM_Perspective(HMM_ToRadians(45), aspect, near, far);
 	glUniformMatrix4fv(projloc, 1, GL_FALSE, (const GLfloat*)&camera.projection.Elements[0]);
 }
 
