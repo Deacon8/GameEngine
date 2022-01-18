@@ -34,6 +34,18 @@ int main()
 	plane.renderer.color = HMM_Vec3(0.9, 0.9, 0.9);
 	plane.renderer.model = LoadOBJ("res/models/cube.obj");
 	plane.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/color.frag");
+	
+	Texture cubemap = LoadCubemap("res/images/skybox/", "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg");
+	Shader skyshader = LazyLoadShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
+	unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	SetUniformSampler2D(skyshader, "skybox", 0);
 
 	double previousTime = glfwGetTime();
 	int frameCount = 0;
