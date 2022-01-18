@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "glad/glad.h"
+#include <string.h>
 
 Texture LoadTexture(const char* image)
 {
@@ -38,7 +39,7 @@ void SetTexture(Texture texture, unsigned int binding)
     glBindTexture(GL_TEXTURE_2D, texture.tex);
 }
 
-Texture LoadCubemap(char* path, char* name1, char* name2, char* name3, char* name4, char* name5, char* name6)
+Texture LoadCubemap(char* name1, char* name2, char* name3, char* name4, char* name5, char* name6)
 {
     Texture cubemap;
     glGenTextures(1, &cubemap.tex);
@@ -60,25 +61,25 @@ Texture LoadCubemap(char* path, char* name1, char* name2, char* name3, char* nam
     // -Y (bottom)
     // +Z (front) 
     // -Z (back)
-
-    cubemap.data = stbi_load(strcat(path, name1), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    //This is dumb but whatever
+    cubemap.data = stbi_load(name1, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 0, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name2), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name2, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 1, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name3), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name3, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 2, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name4), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name4, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 3, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name5), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name5, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 4, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name6), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name6, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 5, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-
+    //printf("t: %i\n", glGetError());
     return cubemap;
 }

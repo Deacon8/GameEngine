@@ -9,6 +9,8 @@ struct Transform;
 typedef struct Transform Transform;
 struct Texture;
 typedef struct Texture Texture;
+struct Cubemap;
+typedef struct Cubemap Cubemap;
 
 #include "glad/glad.h"
 //unnecessary??

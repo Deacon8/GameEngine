@@ -34,8 +34,60 @@ int main()
 	plane.renderer.color = HMM_Vec3(0.9, 0.9, 0.9);
 	plane.renderer.model = LoadOBJ("res/models/cube.obj");
 	plane.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/color.frag");
-	
-	Texture cubemap = LoadCubemap("res/images/skybox/", "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg");
+	//Extra Data
+const static float skyboxVertices[] = 
+{
+    // positions          
+  -10.0f,  10.0f, -10.0f,
+  -10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  
+  -10.0f, -10.0f,  10.0f,
+  -10.0f, -10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f, -10.0f,
+  -10.0f,  10.0f,  10.0f,
+  -10.0f, -10.0f,  10.0f,
+  
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+   
+  -10.0f, -10.0f,  10.0f,
+  -10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f, -10.0f,  10.0f,
+  -10.0f, -10.0f,  10.0f,
+  
+  -10.0f,  10.0f, -10.0f,
+   10.0f,  10.0f, -10.0f,
+   10.0f,  10.0f,  10.0f,
+   10.0f,  10.0f,  10.0f,
+  -10.0f,  10.0f,  10.0f,
+  -10.0f,  10.0f, -10.0f,
+  
+  -10.0f, -10.0f, -10.0f,
+  -10.0f, -10.0f,  10.0f,
+   10.0f, -10.0f, -10.0f,
+   10.0f, -10.0f, -10.0f,
+  -10.0f, -10.0f,  10.0f,
+   10.0f, -10.0f,  10.0f
+};	
+	printf("Test");
+	Texture cubemap = LoadCubemap(
+		"res/images/skybox/right.jpg", 
+		"res/images/skybox/left.jpg", 
+		"res/images/skybox/top.jpg", 
+		"res/images/skybox/bottom.jpg",
+		"res/images/skybox/front.jpg", 
+		"res/images/skybox/back.jpg");
 	Shader skyshader = LazyLoadShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
 	unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
@@ -45,6 +97,7 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glUseProgram(skyshader.ShaderProgram);
 	SetUniformSampler2D(skyshader, "skybox", 0);
 
 	double previousTime = glfwGetTime();
@@ -80,7 +133,19 @@ int main()
 			rotate(&camera.transform, HMM_Vec3(0, glfwGetTime(), 0));
 		}
 		PreDraw();
-
+		glDepthMask(GL_FALSE);  // change depth function so depth test passes when values are equal to depth buffer's content
+        glUseProgram(skyshader.ShaderProgram);
+        hmm_mat4 view = GetCameraView(camera); // remove translation from the view matrix
+		SetUniformMat4(skyshader, "view", view);
+		SetUniformMat4(skyshader, "projection", camera.projection);
+        // skybox cube
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.tex);
+		//printf("wf; %i", cubemap.tex);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthMask(GL_TRUE);
 		//rotate(&camera.transform, HMM_Vec3(0, 0.1, 0));
 		double currentTime = glfwGetTime();
 		frameCount++;
@@ -96,6 +161,21 @@ int main()
 		DrawEntity(entity, camera);
 		DrawEntity(two, camera);
 		//DrawEntity(plane, camera);
+/*
+		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+        glUseProgram(skyshader.ShaderProgram);
+        hmm_mat4 view = GetCameraView(camera); // remove translation from the view matrix
+		SetUniformMat4(skyshader, "view", view);
+		SetUniformMat4(skyshader, "projection", camera.projection);
+        // skybox cube
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.tex);
+		//printf("wf; %i", cubemap.tex);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+*/
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
