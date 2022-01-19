@@ -6,8 +6,8 @@ Camera NewCamera()
 {
     Camera camera;
     camera.transform = CreateNewTransform();
-    camera.projection = HMM_Perspective(HMM_ToRadians(45), (float)800/(float)600, 0.1f, 500.0f);
-    camera.view = camera.transform.final;
+    camera.projection = HMM_Perspective(HMM_ToRadians(45), (float)800/(float)600, 0.1f, 100.0f);
+    camera.view = HMM_LookAt(camera.transform.position, camera.transform.rotation, HMM_Vec3(0, 1, 0));;
     return camera;
 }
 
@@ -17,7 +17,7 @@ Camera CreateCamera(hmm_vec3 position, hmm_vec3 rotation, float fv, float aspect
     camera.transform = CreateNewTransform();
     translate(&camera.transform, position);
     camera.projection = HMM_Perspective(HMM_ToRadians(45), aspect, near, far);
-    camera.view = camera.transform.final;
+    camera.view = HMM_LookAt(camera.transform.position, camera.transform.rotation, HMM_Vec3(0, 1, 0));;
     return camera;
 }
 

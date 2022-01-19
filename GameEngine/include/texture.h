@@ -1,4 +1,8 @@
 #pragma once
+struct Shader;
+typedef struct Shader Shader;
+struct Camera;
+typedef struct Camera Camera;
 
 struct Texture
 {
@@ -6,6 +10,9 @@ struct Texture
     unsigned char* data;
     
     unsigned int tex;
+
+    //for cubemaps temp
+    unsigned int VAO;
 };typedef struct Texture Texture;
 
 struct Cubemap
@@ -22,4 +29,5 @@ Texture LoadTexture(const char* image);
 
 void SetTexture(Texture texture, unsigned int binding);
 
-Texture LoadCubemap(char* name1, char* name2, char* name3, char* name4, char* name5, char* name6);
+Texture LoadCubemap(Shader shader, char* name1, char* name2, char* name3, char* name4, char* name5, char* name6);
+void DrawCubemap(Texture texture, Shader shader, Camera camera);
