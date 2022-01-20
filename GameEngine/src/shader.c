@@ -109,8 +109,12 @@ void SetCameraUniforms(Shader shader, Camera camera)
 	glUseProgram(shader.ShaderProgram);
 	//glUniformMatrix4fv(modelloc, 1, GL_FALSE, &camera.model.Elements[0]);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	//hmm_mat4 view = GetCameraView(camera);
 	hmm_mat4 view = HMM_LookAt(camera.transform.position, HMM_AddVec3(camera.transform.position, camera.transform.rotation), HMM_Vec3(0, 1, 0)); // remove translation from the view matrix
+=======
+	hmm_mat4 view = GetCameraViewC(camera);
+>>>>>>> Stashed changes
 =======
 	hmm_mat4 view = GetCameraViewC(camera);
 >>>>>>> Stashed changes

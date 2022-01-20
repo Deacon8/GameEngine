@@ -13,6 +13,9 @@ Camera NewCamera()
     camera.projection = HMM_Perspective(HMM_ToRadians(45), (float)800/(float)600, 0.1f, 500.0f);
     camera.view = camera.transform.final;
     camera.zoom = 45.0f;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     return camera;
 }
@@ -28,6 +31,9 @@ Camera CreateCamera(hmm_vec3 position, hmm_vec3 rotation, float fv, float aspect
 =======
     camera.view = camera.transform.final;
     camera.zoom = fv;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     return camera;
 }

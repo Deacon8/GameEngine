@@ -46,6 +46,9 @@ int main()
 	Texture cubemap = LoadCubemap
 	(
 		skyshader,
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 		"res/images/skybox/right.jpg", 
 		"res/images/skybox/left.jpg", 
@@ -53,10 +56,13 @@ int main()
 		"res/images/skybox/bottom.jpg",
 		"res/images/skybox/front.jpg", 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		"res/images/skybox/back.jpg");
 
 	translate(&camera.transform, HMM_Vec3(0, 0, -50));
 =======
+=======
+>>>>>>> Stashed changes
 		"res/images/skybox/back.jpg"
 		);
 	
@@ -64,12 +70,16 @@ int main()
 	int frameCount = 0;
 
 	camera.projection = HMM_Perspective(45.0f, (float)800/(float)600, 0.1f, 100);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	while(WindowOpen())
 	{	
 		const float cameraSpeed = 0.05f; // adjust accordingly
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 			rotate(&camera.transform, HMM_Vec3(0, 0.1, 0));
 =======
@@ -131,6 +141,40 @@ int main()
 		}
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 		{
+=======
+			translate(&camera.transform, HMM_Vec3(0, 0, -cameraSpeed));
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			translate(&camera.transform, HMM_Vec3(-cameraSpeed, 0, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			translate(&camera.transform, HMM_Vec3(0, 0, cameraSpeed));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			translate(&camera.transform, HMM_Vec3(cameraSpeed, 0, 0));
+		}		
+		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, -cameraSpeed, 0));
+		}
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(-cameraSpeed, 0, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, cameraSpeed, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(cameraSpeed, 0, 0));
+		}
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		{
+>>>>>>> Stashed changes
 			camera.zoom-=0.1f;
 			camera.projection = HMM_Perspective(camera.zoom, (float)800/(float)600, 0.1f, 100);
 			//printf("z: %f\n", zoom);
@@ -157,6 +201,7 @@ int main()
 		{
 			translate(&camera.transform, HMM_Vec3(0, 0, -0.1));
 		}
+<<<<<<< Updated upstream
 		if (glfwGetKey(window, GLFW_KEY_I))
 		{
 			
@@ -171,6 +216,8 @@ int main()
 
 
 		glfwSwapBuffers(window);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 		glfwPollEvents();
