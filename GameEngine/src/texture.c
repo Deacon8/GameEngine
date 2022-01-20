@@ -3,7 +3,54 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "glad/glad.h"
+#include "shader.h"
+#include "camera.h"
 #include <string.h>
+
+const static float skyboxVertices[] = 
+{
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+};	
 
 Texture LoadTexture(const char* image)
 {
@@ -77,6 +124,7 @@ const static float skyboxVertices[] =
     -1.0f,  1.0f,  1.0f,
     -1.0f,  1.0f, -1.0f,
 
+<<<<<<< Updated upstream
     -1.0f, -1.0f, -1.0f,
     -1.0f, -1.0f,  1.0f,
     1.0f, -1.0f, -1.0f,
@@ -85,6 +133,8 @@ const static float skyboxVertices[] =
     1.0f, -1.0f,  1.0f
 };	
 
+=======
+>>>>>>> Stashed changes
 Texture LoadCubemap(Shader shader, char* name1, char* name2, char* name3, char* name4, char* name5, char* name6)
 {
     Texture cubemap;
@@ -127,6 +177,10 @@ Texture LoadCubemap(Shader shader, char* name1, char* name2, char* name3, char* 
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 5, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
     //printf("t: %i\n", glGetError());
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -145,12 +199,22 @@ void DrawCubemap(Texture texture, Shader shader, Camera camera)
 {
     glDepthMask(GL_FALSE);  // change depth function so depth test passes when values are equal to depth buffer's content
     glUseProgram(shader.ShaderProgram);
+<<<<<<< Updated upstream
     hmm_mat4 view = HMM_LookAt(camera.transform.position, camera.transform.rotation, HMM_Vec3(0, 1, 0)); // remove translation from the view matrix
     //hmm_mat4 view = HMM_LookAt(camera.transform.position, GetRotation(camera.transform), HMM_Vec3(0, 1, 0)); // remove translation from the view matrix
     
     view.Elements[3][0] = 0;
     view.Elements[3][1] = 0;
     view.Elements[3][2] = 0;
+=======
+    hmm_mat4 view = GetCameraViewC(camera);
+    view.Elements[3][0] = 0;
+    view.Elements[3][1] = 0;
+    view.Elements[3][2] = 0;
+    view.Elements[0][3] = 0;
+    view.Elements[0][3] = 0;
+    view.Elements[0][3] = 0;
+>>>>>>> Stashed changes
     SetUniformMat4(shader, "view", view);
     SetUniformMat4(shader, "projection", camera.projection);
     // skybox cube

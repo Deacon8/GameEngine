@@ -34,25 +34,51 @@ int main()
 	plane.renderer.color = HMM_Vec3(0.9, 0.9, 0.9);
 	plane.renderer.model = LoadOBJ("res/models/cube.obj");
 	plane.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/color.frag");
+<<<<<<< Updated upstream
 	//Skybox
 	Shader skyshader = LazyLoadShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
 	Texture cubemap = LoadCubemap(skyshader,
+=======
+	//Extra Data
+
+	//printf("Test");
+	Shader skyshader = LazyLoadShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
+	Texture cubemap = LoadCubemap
+	(
+		skyshader,
+>>>>>>> Stashed changes
 		"res/images/skybox/right.jpg", 
 		"res/images/skybox/left.jpg", 
 		"res/images/skybox/top.jpg", 
 		"res/images/skybox/bottom.jpg",
 		"res/images/skybox/front.jpg", 
+<<<<<<< Updated upstream
 		"res/images/skybox/back.jpg");
 
 	translate(&camera.transform, HMM_Vec3(0, 0, -50));
+=======
+		"res/images/skybox/back.jpg"
+		);
+	
+	double previousTime = glfwGetTime();
+	int frameCount = 0;
+
+	camera.projection = HMM_Perspective(45.0f, (float)800/(float)600, 0.1f, 100);
+>>>>>>> Stashed changes
 	while(WindowOpen())
 	{	
-		if (glfwGetKey(window, GLFW_KEY_W))
+		const float cameraSpeed = 0.05f; // adjust accordingly
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
+<<<<<<< Updated upstream
 			rotate(&camera.transform, HMM_Vec3(0, 0.1, 0));
+=======
+			translate(&camera.transform, HMM_Vec3(0, 0, -cameraSpeed));
+>>>>>>> Stashed changes
 		}
-		if (glfwGetKey(window, GLFW_KEY_A))
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
+<<<<<<< Updated upstream
 			rotate(&camera.transform, HMM_Vec3(-0.1, 0, 0));
 		}
 		if (glfwGetKey(window, GLFW_KEY_S))
@@ -66,9 +92,25 @@ int main()
 		if (glfwGetKey(window, GLFW_KEY_Z))
 		{
 			rotate(&camera.transform, HMM_Vec3(0, 0, 0.1));
-		}
-		if (glfwGetKey(window, GLFW_KEY_X))
+=======
+			translate(&camera.transform, HMM_Vec3(-cameraSpeed, 0, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
+			translate(&camera.transform, HMM_Vec3(0, 0, cameraSpeed));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			translate(&camera.transform, HMM_Vec3(cameraSpeed, 0, 0));
+		}		
+		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, -cameraSpeed, 0));
+>>>>>>> Stashed changes
+		}
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+		{
+<<<<<<< Updated upstream
 			rotate(&camera.transform, HMM_Vec3(0, 0, -0.1));
 		}
 		if (glfwGetKey(window, GLFW_KEY_I))
@@ -76,6 +118,42 @@ int main()
 			translate(&camera.transform, HMM_Vec3(0, 0, 0.1));
 		}
 		if (glfwGetKey(window, GLFW_KEY_K))
+=======
+			rotate(&camera.transform, HMM_Vec3(-cameraSpeed, 0, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, cameraSpeed, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(cameraSpeed, 0, 0));
+		}
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		{
+			camera.zoom-=0.1f;
+			camera.projection = HMM_Perspective(camera.zoom, (float)800/(float)600, 0.1f, 100);
+			//printf("z: %f\n", zoom);
+		}
+		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		{	
+			camera.zoom+=0.1f;
+			camera.projection = HMM_Perspective(camera.zoom, (float)800/(float)600, 0.1f, 100);
+			//printf("z: %f\n", zoom);
+		}
+		PreDraw();
+		DrawCubemap(cubemap, skyshader, camera);
+
+		DrawEntity(entity, camera);
+		DrawEntity(two, camera);
+		//DrawEntity(plane, camera);
+
+		glfwSwapBuffers(window);
+		double currentTime = glfwGetTime();
+		frameCount++;
+		// If a second has passed.
+		if ( currentTime - previousTime >= 1.0 )
+>>>>>>> Stashed changes
 		{
 			translate(&camera.transform, HMM_Vec3(0, 0, -0.1));
 		}
@@ -83,6 +161,7 @@ int main()
 		{
 			
 		}
+<<<<<<< Updated upstream
 		PreDraw();
 		//DrawCubemap(cubemap, skyshader, camera);
 
@@ -92,6 +171,8 @@ int main()
 
 
 		glfwSwapBuffers(window);
+=======
+>>>>>>> Stashed changes
 		glfwPollEvents();
 	}
 	glfwTerminate();
