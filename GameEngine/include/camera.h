@@ -19,6 +19,8 @@ Camera CreateCamera(hmm_vec3 position, hmm_vec3 rotation, float fv, float aspect
 
 hmm_mat4 GetCameraView(Camera camera);
 hmm_mat4 GetCameraViewC(Camera camera);
+
+hmm_vec3 GetFront(Transform transform);
 //void CalcView(Camera* camera);
 
 //void LookAt(Camera* camera, hmm_vec3 target, hmm_vec3 center, hmm_vec3 up);

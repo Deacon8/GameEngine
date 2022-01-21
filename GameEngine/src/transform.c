@@ -1,6 +1,7 @@
 #include "HandmadeMath.h"
 #include "utilities.h"
 #include "transform.h"
+#include "camera.h"
 
 hmm_vec3 GetRotation(Transform transform)
 {
@@ -46,6 +47,52 @@ Transform CreateTransform(hmm_vec3 pos, hmm_vec3 rot, hmm_v3 scale)
 void translate(Transform* transform, hmm_vec3 change)
 {
     transform->position = HMM_AddVec3(transform->position, change);
+    calcTransform(transform);
+}
+
+//Currently just forward
+void translateLocal(Transform* transform, Direction dir, float magnitude)
+{      
+    hmm_vec3 front = GetFront(*transform);
+    hmm_vec3 up = HMM_Vec3(0, 1, 0);
+    hmm_vec3 right = HMM_NormalizeVec3(HMM_Cross(front, up));
+    front.X *= magnitude;
+    front.Y *= magnitude;
+    front.Z *= magnitude;
+    hmm_vec3 back;
+    back.X = -front.X;
+    back.Y = -front.Y;
+    back.Z = -front.Z;
+    right.X *= magnitude;
+    right.Y *= magnitude;
+    right.Z *= magnitude;
+    hmm_vec3 left;
+    left.X = -right.X;
+    left.Y = -right.Y;
+    left.Z = -right.Z;
+
+    switch (dir)
+    {
+    case Dforward:
+        transform->position = HMM_AddVec3(transform->position, front);
+        break;
+    case Dback:
+        transform->position = HMM_AddVec3(transform->position, back);
+        break;
+    case Dright:
+        transform->position = HMM_AddVec3(transform->position, right);
+        break;
+    case Dleft:
+        transform->position = HMM_AddVec3(transform->position, left);
+        break;
+    case Dup:
+        transform->position = HMM_AddVec3(transform->position, front);
+        break;
+    case Ddown:
+        transform->position = HMM_AddVec3(transform->position, front);
+        break;
+    break;
+    }
     calcTransform(transform);
 }
 
