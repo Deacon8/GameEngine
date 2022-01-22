@@ -1,7 +1,56 @@
 #include "texture.h"
+#include "shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "glad/glad.h"
+#include "shader.h"
+#include "camera.h"
+#include <string.h>
+
+const static float skyboxVertices[] = 
+{
+    -1.0f,  1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+    -1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f
+};	
 
 Texture LoadTexture(const char* image)
 {
@@ -36,9 +85,9 @@ void SetTexture(Texture texture, unsigned int binding)
 {
     glActiveTexture(GL_TEXTURE0 + binding);
     glBindTexture(GL_TEXTURE_2D, texture.tex);
-}
+}	
 
-Texture LoadCubemap(char* path, char* name1, char* name2, char* name3, char* name4, char* name5, char* name6)
+Texture LoadCubemap(Shader shader, char* name1, char* name2, char* name3, char* name4, char* name5, char* name6)
 {
     Texture cubemap;
     glGenTextures(1, &cubemap.tex);
@@ -60,25 +109,62 @@ Texture LoadCubemap(char* path, char* name1, char* name2, char* name3, char* nam
     // -Y (bottom)
     // +Z (front) 
     // -Z (back)
-
-    cubemap.data = stbi_load(strcat(path, name1), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    //This is dumb but whatever
+    cubemap.data = stbi_load(name1, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 0, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name2), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name2, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 1, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name3), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name3, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 2, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name4), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name4, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 3, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name5), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name5, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 4, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
-    cubemap.data = stbi_load(strcat(path, name6), &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
+    cubemap.data = stbi_load(name6, &cubemap.width, &cubemap.height, &cubemap.nrChannels, 0);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + 5, 0, GL_RGB, cubemap.width, cubemap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, cubemap.data);
     stbi_image_free(cubemap.data);
+    //printf("t: %i\n", glGetError());
 
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glUseProgram(shader.ShaderProgram);
+	SetUniformSampler2D(shader, "skybox", 0);
+    cubemap.VAO = skyboxVAO;
     return cubemap;
+}
+
+void DrawCubemap(Texture texture, Shader shader, Camera camera)
+{
+    glDepthMask(GL_FALSE);  // change depth function so depth test passes when values are equal to depth buffer's content
+    glUseProgram(shader.ShaderProgram);
+
+    hmm_mat4 view = GetCameraViewC(camera);
+    view.Elements[3][0] = 0;
+    view.Elements[3][1] = 0;
+    view.Elements[3][2] = 0;
+    view.Elements[0][3] = 0;
+    view.Elements[0][3] = 0;
+    view.Elements[0][3] = 0;
+
+    SetUniformMat4(shader, "view", view);
+    SetUniformMat4(shader, "projection", camera.projection);
+    // skybox cube
+    glBindVertexArray(texture.VAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture.tex);
+    //printf("wf; %i", cubemap.tex);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
 }

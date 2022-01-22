@@ -6,20 +6,20 @@ int main()
 	LoadGLFW();
 	LoadOpengl();
 
-	Camera camera = CreateCamera(HMM_Vec3(0, 0, -50), HMM_Vec3(0, 0, 0), HMM_ToRadians(45), (float)800/(float)600, 0.1f, 100.0f);
+	Camera camera = CreateCamera(HMM_Vec3(0, 0, 0), HMM_Vec3(0, 0, 0), HMM_ToRadians(45), (float)800/(float)600, 0.1f, 100.0f);
 
 	Entity entity;
 	entity.transform = CreateNewTransform();
 	entity.renderer.shadertype = basic_texture;
 	entity.renderer.texture = LoadTexture("res/models/cat.jpg");
-	translate(&entity.transform, HMM_Vec3(-1, 0, 0));
+	translate(&entity.transform, HMM_Vec3(-5, 0, 0));
 	scale(&entity.transform, HMM_Vec3(-0.5, -0.5, -0.5));
 	entity.renderer.model = LoadOBJ("res/models/sphere.obj");
 	entity.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/texture.frag");
 
 	Entity two;
 	two.transform = CreateNewTransform();
-	translate(&two.transform, HMM_Vec3(1, 0, 0));
+	translate(&two.transform, HMM_Vec3(5, 0, 0));
 	scale(&two.transform, HMM_Vec3(-0.5, -0.5, -0.5));
 	two.renderer.shadertype = basic_color;
 	two.renderer.color = HMM_Vec3(1, 0, 0);
@@ -34,70 +34,93 @@ int main()
 	plane.renderer.color = HMM_Vec3(0.9, 0.9, 0.9);
 	plane.renderer.model = LoadOBJ("res/models/cube.obj");
 	plane.renderer.shader = LazyLoadShader("res/shaders/basic.vert", "res/shaders/color.frag");
-	
-	Texture cubemap = LoadCubemap("res/images/skybox/", "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg");
+	//Skybox
 	Shader skyshader = LazyLoadShader("res/shaders/skybox.vert", "res/shaders/skybox.frag");
-	unsigned int skyboxVAO, skyboxVBO;
-    glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &skyboxVBO);
-    glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	SetUniformSampler2D(skyshader, "skybox", 0);
+	Texture cubemap = LoadCubemap
+	(
+		skyshader,
+		"res/images/skybox/right.jpg", 
+		"res/images/skybox/left.jpg", 
+		"res/images/skybox/top.jpg", 
+		"res/images/skybox/bottom.jpg",
+		"res/images/skybox/front.jpg", 
+		"res/images/skybox/back.jpg");
 
+	translate(&camera.transform, HMM_Vec3(0, 0, -25));
+	
 	double previousTime = glfwGetTime();
 	int frameCount = 0;
+	
+	camera.projection = HMM_Perspective(45.0f, (float)800/(float)600, 0.1f, 100);
 	while(WindowOpen())
 	{	
-		if (glfwGetKey(window, GLFW_KEY_W))
+		const float cameraSpeed = 0.05f; // adjust accordingly
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			translate(&camera.transform, HMM_Vec3(0, 0, 0.001));
+			translateLocal(&camera.transform, Dforward, cameraSpeed);
 		}
-		if (glfwGetKey(window, GLFW_KEY_A))
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			translate(&camera.transform, HMM_Vec3(-0.001, 0, 0));
+			translateLocal(&camera.transform, Dleft, cameraSpeed);
+		}    
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			translateLocal(&camera.transform, Dback, cameraSpeed);
+		}    
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			translateLocal(&camera.transform, Dright, cameraSpeed);
+		}		
+		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, -cameraSpeed, 0));
 		}
-		if (glfwGetKey(window, GLFW_KEY_S))
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 		{
-			translate(&camera.transform, HMM_Vec3(0, 0, -0.001));
+			rotate(&camera.transform, HMM_Vec3(-cameraSpeed, 0, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(0, cameraSpeed, 0));
+		}    
+		if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+		{
+			rotate(&camera.transform, HMM_Vec3(cameraSpeed, 0, 0));
 		}
-		if (glfwGetKey(window, GLFW_KEY_D))
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 		{
-			translate(&camera.transform, HMM_Vec3(0.001, 0, 0));
+			camera.zoom-=0.1f;
+			camera.projection = HMM_Perspective(camera.zoom, (float)800/(float)600, 0.1f, 100);
+			//printf("z: %f\n", zoom);
 		}
-		if (glfwGetKey(window, GLFW_KEY_Z))
-		{
-			rotate(&entity.transform, HMM_Vec3(-0, 0.001, 0));
-		}
-		if (glfwGetKey(window, GLFW_KEY_X))
-		{
-			rotate(&entity.transform, HMM_Vec3(0, -0.001, 0));
-		}
-		if (glfwGetKey(window, GLFW_KEY_C))
-		{
-			rotate(&camera.transform, HMM_Vec3(0, glfwGetTime(), 0));
+		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		{	
+			camera.zoom+=0.1f;
+			camera.projection = HMM_Perspective(camera.zoom, (float)800/(float)600, 0.1f, 100);
+			//printf("z: %f\n", zoom);
 		}
 		PreDraw();
+		DrawCubemap(cubemap, skyshader, camera);
 
-		//rotate(&camera.transform, HMM_Vec3(0, 0.1, 0));
+		DrawEntity(entity, camera);
+		DrawEntity(two, camera);
+		//DrawEntity(plane, camera);
+
 		double currentTime = glfwGetTime();
 		frameCount++;
 		// If a second has passed.
 		if ( currentTime - previousTime >= 1.0 )
 		{
-			// Display the frame count here any way you want.
-			printf("%i\n", frameCount);
-
+			printf("fps: %i\n", frameCount);
+			printf("fov: %f\n", camera.zoom);
+			printf("pos: %f, %f, %f\n", camera.transform.position.X, camera.transform.position.Y, camera.transform.position.Z);
+			printf("rot: %f, %f, %f\n", camera.transform.rotation.X, camera.transform.rotation.Y, camera.transform.rotation.Z);
+			hmm_vec3 f = GetFront(camera.transform);
+			printf("for: %f, %f, %f\n\n", f.X, f.Y, f.Z);
 			frameCount = 0;
 			previousTime = currentTime;
 		}
-		DrawEntity(entity, camera);
-		DrawEntity(two, camera);
-		//DrawEntity(plane, camera);
 		glfwSwapBuffers(window);
-
 		glfwPollEvents();
 	}
 	glfwTerminate();
