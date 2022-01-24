@@ -45,6 +45,12 @@ hmm_mat4 GetCameraViewC(Camera camera)
     return view;
 }
 
+hmm_mat4 GetCameraViewO(Camera camera, Transform transform)
+{
+	hmm_mat4 view = HMM_LookAt(camera.transform.position, transform.position, HMM_Vec3(0, 1, 0));
+    return view;
+}
+
 hmm_vec3 GetFront(Transform transform)
 {
     hmm_vec3 front;

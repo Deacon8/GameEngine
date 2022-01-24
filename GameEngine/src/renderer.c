@@ -4,7 +4,7 @@
 #include "entity.h"
 #include "glad/glad.h"
 #include <stdio.h>
-//#include "glfw/glfw3.h"
+#include "glfw/glfw3.h"
 
 void DrawEntity(Entity entity, Camera camera)
 {	
@@ -18,6 +18,9 @@ void DrawEntity(Entity entity, Camera camera)
 		case basic_texture:
 		SetTexture(entity.renderer.texture, 0);
 		SetUniformSampler2D(entity.renderer.shader, "intexture", 0);
+		break;
+		case basic_time:
+		SetUniformFloat(entity.renderer.shader, "time", glfwGetTime());
 		break;
 	}
 	//printf("%i\n", glGetError());

@@ -56,6 +56,14 @@ void translateLocal(Transform* transform, Direction dir, float magnitude)
     hmm_vec3 front = GetFront(*transform);
     hmm_vec3 up = HMM_Vec3(0, 1, 0);
     hmm_vec3 right = HMM_NormalizeVec3(HMM_Cross(front, up));
+    hmm_vec3 upt = HMM_NormalizeVec3(HMM_Cross(front, right));
+    upt.X *= magnitude;
+    upt.Y *= magnitude;
+    upt.Z *= magnitude;
+    hmm_vec3 down;
+    down.X = -upt.X;
+    down.Y = -upt.Y;
+    down.Z = upt.Z;
     front.X *= magnitude;
     front.Y *= magnitude;
     front.Z *= magnitude;
@@ -86,10 +94,10 @@ void translateLocal(Transform* transform, Direction dir, float magnitude)
         transform->position = HMM_AddVec3(transform->position, left);
         break;
     case Dup:
-        transform->position = HMM_AddVec3(transform->position, front);
+        transform->position = HMM_AddVec3(transform->position, upt);
         break;
     case Ddown:
-        transform->position = HMM_AddVec3(transform->position, front);
+        transform->position = HMM_AddVec3(transform->position, down);
         break;
     break;
     }

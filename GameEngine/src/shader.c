@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "memory.h"
 #include "camera.h"
+#include "entity.h"
 
 void LoadShaderSource(char* destination, char* path)
 {	
@@ -110,7 +111,24 @@ void SetCameraUniforms(Shader shader, Camera camera)
 	//glUniformMatrix4fv(modelloc, 1, GL_FALSE, &camera.model.Elements[0]);
 	//hmm_mat4 view = GetCameraView(camera);
 	//hmm_mat4 view = HMM_LookAt(camera.transform.position, HMM_AddVec3(camera.transform.position, camera.transform.rotation), HMM_Vec3(0, 1, 0)); // remove translation from the view matrix
+	//hmm_mat4 view = GetCameraViewO(camera, optional.transform);
 	hmm_mat4 view = GetCameraViewC(camera);
+	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&view.Elements[0]);
+	//camera.projection = HMM_Perspective(HMM_ToRadians(45), aspect, near, far);
+	glUniformMatrix4fv(projloc, 1, GL_FALSE, (const GLfloat*)&camera.projection.Elements[0]);
+}
+
+void SetCameraUniformsO(Shader shader, Camera camera, Transform transform)
+{
+	//int modelloc = glGetUniformLocation(shader.ShaderProgram, "model");
+	int viewloc = glGetUniformLocation(shader.ShaderProgram, "view");
+	int projloc = glGetUniformLocation(shader.ShaderProgram, "projection");
+	glUseProgram(shader.ShaderProgram);
+	//glUniformMatrix4fv(modelloc, 1, GL_FALSE, &camera.model.Elements[0]);
+	//hmm_mat4 view = GetCameraView(camera);
+	//hmm_mat4 view = HMM_LookAt(camera.transform.position, HMM_AddVec3(camera.transform.position, camera.transform.rotation), HMM_Vec3(0, 1, 0)); // remove translation from the view matrix
+	hmm_mat4 view = GetCameraViewO(camera, transform);
+	//hmm_mat4 view = GetCameraViewC(camera);
 	glUniformMatrix4fv(viewloc, 1, GL_FALSE, (const GLfloat*)&view.Elements[0]);
 	//camera.projection = HMM_Perspective(HMM_ToRadians(45), aspect, near, far);
 	glUniformMatrix4fv(projloc, 1, GL_FALSE, (const GLfloat*)&camera.projection.Elements[0]);

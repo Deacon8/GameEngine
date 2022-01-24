@@ -2,11 +2,15 @@
 
 #include "model.h"
 #include "shader.h"
+struct Entity;
+typedef struct Entity Entity;
+#include "texture.h"
 
 enum ShaderType
 {
     basic_color, 
-    basic_texture
+    basic_texture,
+    basic_time
 };
 typedef enum ShaderType ShaderType;
 
