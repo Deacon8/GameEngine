@@ -9,6 +9,6 @@ GLFW
 GLAD
 HandmadeMath.h
 stb_image.h
-Thats About ti
+Thats About it
 
 Uses mingw with a makefile and some batch scripts
