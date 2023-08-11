@@ -10,6 +10,5 @@ GLAD
 \
 HandmadeMath.h \
 stb_image.h \
-Thats About it
 
 Compiling uses mingw with a makefile and some batch scripts
