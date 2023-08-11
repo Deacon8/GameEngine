@@ -6,7 +6,8 @@ Written in C
 
 ### Uses
 GLFW \
-GLAD \ 
+GLAD 
+\
 HandmadeMath.h \
 stb_image.h \
 Thats About it
