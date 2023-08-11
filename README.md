@@ -4,11 +4,11 @@ It works though. Somehow.
 
 Written in C
 
-### Uses\
-GLFW\
-GLAD\ 
-HandmadeMath.h\
-stb_image.h\
-Thats About it\
+### Uses
+GLFW \
+GLAD \ 
+HandmadeMath.h \
+stb_image.h \
+Thats About it
 
 Compiling uses mingw with a makefile and some batch scripts
