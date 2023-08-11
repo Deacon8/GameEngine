@@ -9,6 +9,6 @@ GLFW \
 GLAD 
 \
 HandmadeMath.h \
-stb_image.h \
+stb_image.h
 
 Compiling uses mingw with a makefile and some batch scripts
