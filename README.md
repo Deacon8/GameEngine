@@ -4,7 +4,7 @@ It works though. Somehow.
 
 Written in C
 
-Uses\
+### Uses\
 GLFW\
 GLAD\ 
 HandmadeMath.h\
